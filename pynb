@@ -1,0 +1,181 @@
+!pip install fpdf
+import os
+from fpdf import FPDF
+
+def generate_medical_report(patient_name, age, gender, disease, medicines, doctor_name, billing_amount):
+    # Ensure directory exists
+    output_dir = "/mnt/data"
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Initialize PDF
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    # Title
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(200, 10, txt="Smart Clinic - Medical Report", ln=True, align='C')
+    pdf.ln(10)
+
+    # Body content
+    pdf.set_font("Arial", size=12)
+    pdf.cell(200, 10, txt=f"Patient Name: {patient_name}", ln=True)
+    pdf.cell(200, 10, txt=f"Age: {age}", ln=True)
+    pdf.cell(200, 10, txt=f"Gender: {gender}", ln=True)
+    pdf.cell(200, 10, txt=f"Disease Diagnosed: {disease}", ln=True)
+    pdf.multi_cell(0, 10, txt=f"Prescribed Medicines: {medicines}")
+    pdf.cell(200, 10, txt=f"Doctor Name: {doctor_name}", ln=True)
+    pdf.cell(200, 10, txt=f"Billing Amount: Rs. {billing_amount}", ln=True)
+
+    # Save the report
+    filename = f"{patient_name.replace(' ', '_')}_report.pdf"
+    filepath = os.path.join(output_dir, filename)
+    pdf.output(filepath)
+
+    return filepath
+
+# Generate report
+generate_medical_report(
+    patient_name="Dev Sharma",
+    age=35,
+    gender="Male",
+    disease="Type 2 Diabetes",
+    medicines="Metformin 500mg, Glimepiride 1mg",
+    doctor_name="Dr. Anita Desai",
+    billing_amount=750
+)
+import os
+from fpdf import FPDF
+from IPython.display import FileLink
+
+def generate_health_checkup_report(patient_name, age, gender, checkup_date, blood_test_results, heart_disease_diagnosis, body_checkup_summary, doctor_name, billing_amount):
+    output_dir = "reports"
+    os.makedirs(output_dir, exist_ok=True)
+
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    # Title
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(200, 10, txt="Smart Clinic - Health Checkup Report", ln=True, align='C')
+    pdf.ln(10)
+
+    # Patient Info
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(200, 10, txt="Patient Information", ln=True)
+    pdf.set_font("Arial", size=12)
+    pdf.cell(200, 10, txt=f"Name: {patient_name}", ln=True)
+    pdf.cell(200, 10, txt=f"Age: {age}", ln=True)
+    pdf.cell(200, 10, txt=f"Gender: {gender}", ln=True)
+    pdf.cell(200, 10, txt=f"Date of Checkup: {checkup_date}", ln=True)
+    pdf.ln(5)
+
+    # Blood Test Results
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(200, 10, txt="Blood Test Results", ln=True)
+    pdf.set_font("Arial", size=12)
+    pdf.multi_cell(0, 10, txt=blood_test_results)
+    pdf.ln(5)
+
+    # Heart Disease Diagnosis
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(200, 10, txt="Heart Disease Diagnosis", ln=True)
+    pdf.set_font("Arial", size=12)
+    pdf.multi_cell(0, 10, txt=heart_disease_diagnosis)
+    pdf.ln(5)
+
+    # Regular Body Checkup Summary
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(200, 10, txt="Regular Body Checkup Summary", ln=True)
+    pdf.set_font("Arial", size=12)
+    pdf.multi_cell(0, 10, txt=body_checkup_summary)
+    pdf.ln(5)
+
+    # Doctor & Billing Info
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(200, 10, txt="Doctor & Billing Information", ln=True)
+    pdf.set_font("Arial", size=12)
+    pdf.cell(200, 10, txt=f"Doctor: {doctor_name}", ln=True)
+    pdf.cell(200, 10, txt=f"Billing Amount: Rs. {billing_amount}", ln=True)
+
+    filename = f"{patient_name.replace(' ', '_')}_Health_Checkup_Report.pdf"
+    filepath = os.path.join(output_dir, filename)
+    pdf.output(filepath)
+
+    return filepath
+
+# Generate report again
+report_path = generate_health_checkup_report(
+    patient_name="MR X",
+    age=58,
+    gender="Male",
+    checkup_date="2025-05-16",
+    blood_test_results=(
+        "Hemoglobin: 13.5 g/dL\n"
+        "WBC Count: 6,000 /µL\n"
+        "Platelets: 150,000 /µL\n"
+        "Blood Sugar (Fasting): 95 mg/dL\n"
+        "Cholesterol: 180 mg/dL"
+    ),
+    heart_disease_diagnosis=(
+        "ECG shows mild abnormalities suggestive of ischemia.\n"
+        "Echocardiogram indicates slight left ventricular hypertrophy.\n"
+        "Recommended lifestyle changes and medications."
+    ),
+    body_checkup_summary=(
+        "Normal blood pressure and pulse rate.\n"
+        "No signs of diabetes or thyroid abnormalities.\n"
+        "BMI within healthy range.\n"
+        "Recommended routine follow-ups every 6 months."
+    ),
+    doctor_name="Dr. Anjali Verma",
+    billing_amount=5000
+)
+
+# Display working download link
+FileLink(report_path)
+!pip install gradio
+import gradio as gr
+from datetime import date
+
+def book_lab_test(patient_name, age, gender, test, appointment_date, appointment_time):
+    confirmation = f"Lab Test Booking Confirmed!\n\nPatient: {patient_name}\nAge: {age}\nGender: {gender}\nTest: {test}\nAppointment Date: {appointment_date}\nAppointment Time: {appointment_time}"
+    return confirmation
+
+test_options = [
+    "Complete Blood Count (CBC)",
+    "Lipid Profile",
+    "Blood Sugar Test",
+    "Liver Function Test",
+    "Kidney Function Test",
+    "Thyroid Panel",
+    "Vitamin D Test",
+    "COVID-19 PCR Test",
+    "Urine Analysis"
+]
+
+with gr.Blocks() as lab_test_ui:
+    gr.Markdown("## Book Lab Tests")
+
+    with gr.Row():
+        patient_name = gr.Textbox(label="Patient Name", placeholder="Enter full name")
+        age = gr.Number(label="Age", value=30, precision=0)
+        gender = gr.Radio(choices=["Male", "Female", "Other"], label="Gender")
+
+    test = gr.Dropdown(choices=test_options, label="Select Lab Test")
+
+    appointment_date = gr.Textbox(label="Appointment Date (YYYY-MM-DD)", value=str(date.today()))
+    appointment_time = gr.Textbox(label="Appointment Time (HH:MM)", value="09:00")
+
+    book_button = gr.Button("Book Test")
+    output = gr.Textbox(label="Booking Confirmation", interactive=False)
+
+    book_button.click(
+        book_lab_test,
+        inputs=[patient_name, age, gender, test, appointment_date, appointment_time],
+        outputs=output
+    )
+
+lab_test_ui.launch()
+
